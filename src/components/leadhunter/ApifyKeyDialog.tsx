@@ -46,7 +46,7 @@ export const ApifyKeyDialog = ({ open, onOpenChange, onSaved }: Props) => {
           </div>
           <DialogTitle className="text-2xl font-semibold tracking-tight">Conecte sua conta Apify 🔑</DialogTitle>
           <DialogDescription className="text-base pt-2">
-            O EXTRATOR N1 usa a <strong>Apify</strong> para extrair leads do Google Maps. Você precisa apenas colar sua API token uma vez.
+            O DRYOS OS - Extrator usa a <strong>Apify</strong> para extrair leads do Google Maps. Você precisa apenas colar sua API token uma vez.
           </DialogDescription>
         </DialogHeader>
 

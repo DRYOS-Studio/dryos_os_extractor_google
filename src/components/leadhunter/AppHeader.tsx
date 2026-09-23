@@ -18,7 +18,7 @@ export const AppHeader = () => {
           <div className="h-9 w-9 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
             <Target className="h-[22px] w-[22px] text-primary-foreground" strokeWidth={1.75} />
           </div>
-          <span className="font-display font-bold text-lg tracking-tight">EXTRATOR N1</span>
+          <span className="font-display font-bold text-lg tracking-tight">DRYOS OS - Extrator</span>
         </Link>
 
         {user && (

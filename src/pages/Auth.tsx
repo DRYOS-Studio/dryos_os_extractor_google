@@ -55,7 +55,7 @@ export default function Auth() {
           </div>
           <div className="flex items-baseline">
             <span className="text-3xl font-bold tracking-tight leading-none text-foreground font-display uppercase">
-              EXTRATOR N1
+              DRYOS OS - Extrator
             </span>
           </div>
         </Link>
