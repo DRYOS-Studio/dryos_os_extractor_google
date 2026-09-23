@@ -14,10 +14,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Epilogue', 'system-ui', 'sans-serif'],
-        serif: ['Epilogue', 'system-ui', 'sans-serif'],
-        mono: ['Epilogue', 'ui-monospace', 'monospace'],
-        display: ['Urbanist', 'system-ui', 'sans-serif'],
+        sans: ['Onest', 'system-ui', 'sans-serif'],
+        serif: ['Onest', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        display: ['"Funnel Display"', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

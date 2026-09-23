@@ -274,7 +274,7 @@ export default function SearchPage() {
               <Button
                 onClick={runSearch}
                 disabled={running}
-                className="w-full bg-gradient-accent shadow-accent-glow text-accent-foreground hover:opacity-90 font-semibold"
+                className="w-full bg-gradient-accent shadow-accent-glow text-primary-foreground hover:opacity-90 font-semibold"
                 size="lg"
               >
                 {running ? <Loader2 className="h-4 w-4 animate-spin" /> : <Rocket className="h-4 w-4" />}

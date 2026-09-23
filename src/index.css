@@ -2,98 +2,92 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&family=Epilogue:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=Onest:wght@300..600&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @layer base {
   :root {
-    --background: 220 40% 98%;
-    --foreground: 222 47% 11%;
+    /* DRYOS design system — bg/surface/ink/oak tokens */
+    --background: 60 17% 98%;
+    --foreground: 0 0% 4%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 0 0% 4%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 0 0% 4%;
 
-    /* Primary: vibrant blue */
-    --primary: 222 89% 55%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 222 95% 65%;
+    /* Primary: oak (verde de marca) */
+    --primary: 144 30% 17%;
+    --primary-foreground: 60 17% 98%;
+    --primary-glow: 135 18% 35%;
 
-    /* Secondary: soft surface */
-    --secondary: 220 30% 95%;
-    --secondary-foreground: 222 47% 15%;
+    /* Secondary: surface */
+    --secondary: 60 13% 94%;
+    --secondary-foreground: 0 0% 4%;
 
-    --muted: 220 25% 94%;
-    --muted-foreground: 220 10% 46%;
+    --muted: 60 14% 91%;
+    --muted-foreground: 60 1% 41%;
 
-    /* Accent: orange CTA */
-    --accent: 24 95% 55%;
-    --accent-foreground: 0 0% 100%;
-    --accent-glow: 30 100% 62%;
+    /* Accent: oak-tint surface */
+    --accent: 120 13% 92%;
+    --accent-foreground: 144 30% 17%;
+    --accent-glow: 135 18% 35%;
 
-    /* Success green */
-    --success: 152 70% 42%;
-    --success-foreground: 0 0% 100%;
+    --success: 146 44% 33%;
+    --success-foreground: 60 17% 98%;
 
-    /* Warning yellow */
-    --warning: 42 95% 55%;
-    --warning-foreground: 30 50% 15%;
+    --warning: 39 81% 38%;
+    --warning-foreground: 60 17% 98%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 16 46% 37%;
+    --destructive-foreground: 60 17% 98%;
 
-    --border: 220 20% 90%;
-    --input: 220 20% 90%;
-    --ring: 222 89% 55%;
+    --border: 60 2% 91%;
+    --input: 60 2% 91%;
+    --ring: 125 19% 64%;
 
-    --radius: 0.875rem;
+    --radius: 0.625rem;
 
-    --gradient-primary: linear-gradient(135deg, hsl(222 89% 55%), hsl(250 85% 62%));
-    --gradient-accent: linear-gradient(135deg, hsl(24 95% 55%), hsl(14 95% 58%));
-    --gradient-bg: linear-gradient(180deg, hsl(220 50% 98%), hsl(220 40% 96%));
-    --gradient-hero: radial-gradient(ellipse at top, hsl(222 95% 65% / 0.15), transparent 60%);
-
-    --shadow-sm: 0 1px 2px hsl(222 50% 20% / 0.04);
-    --shadow-md: 0 4px 12px hsl(222 50% 20% / 0.06);
-    --shadow-lg: 0 12px 32px hsl(222 50% 20% / 0.10);
-    --shadow-glow: 0 8px 24px hsl(222 89% 55% / 0.25);
-    --shadow-accent: 0 8px 24px hsl(24 95% 55% / 0.30);
+    --shadow-sm: 0 1px 2px hsl(0 0% 4% / 0.04);
+    --shadow-md: 0 2px 8px hsl(0 0% 4% / 0.06);
+    --shadow-lg: 0 8px 20px hsl(0 0% 4% / 0.08);
+    --shadow-glow: 0 1px 2px hsl(0 0% 4% / 0.05);
+    --shadow-accent: 0 1px 2px hsl(0 0% 4% / 0.05);
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 222 47% 15%;
-    --sidebar-primary: 222 89% 55%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 30% 95%;
-    --sidebar-accent-foreground: 222 47% 15%;
-    --sidebar-border: 220 20% 90%;
-    --sidebar-ring: 222 89% 55%;
+    --sidebar-foreground: 0 0% 4%;
+    --sidebar-primary: 144 30% 17%;
+    --sidebar-primary-foreground: 60 17% 98%;
+    --sidebar-accent: 60 13% 94%;
+    --sidebar-accent-foreground: 0 0% 4%;
+    --sidebar-border: 60 2% 91%;
+    --sidebar-ring: 125 19% 64%;
   }
 
   .dark {
-    --background: 222 47% 8%;
-    --foreground: 220 30% 96%;
-    --card: 222 40% 12%;
-    --card-foreground: 220 30% 96%;
-    --popover: 222 40% 12%;
-    --popover-foreground: 220 30% 96%;
-    --primary: 222 89% 65%;
-    --primary-foreground: 222 47% 8%;
-    --secondary: 222 30% 18%;
-    --secondary-foreground: 220 30% 96%;
-    --muted: 222 30% 18%;
-    --muted-foreground: 220 15% 65%;
-    --accent: 24 95% 60%;
-    --accent-foreground: 0 0% 100%;
-    --success: 152 65% 50%;
-    --success-foreground: 0 0% 100%;
-    --warning: 42 95% 60%;
-    --warning-foreground: 30 50% 15%;
-    --destructive: 0 70% 55%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 222 30% 22%;
-    --input: 222 30% 22%;
-    --ring: 222 89% 65%;
+    --background: 0 0% 4%;
+    --foreground: 60 17% 98%;
+    --card: 0 0% 10%;
+    --card-foreground: 60 17% 98%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 60 17% 98%;
+    --primary: 135 18% 35%;
+    --primary-foreground: 60 17% 98%;
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 60 17% 98%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 60 2% 59%;
+    --accent: 0 0% 16%;
+    --accent-foreground: 60 17% 98%;
+    --success: 146 44% 40%;
+    --success-foreground: 0 0% 4%;
+    --warning: 39 81% 45%;
+    --warning-foreground: 0 0% 4%;
+    --destructive: 16 46% 45%;
+    --destructive-foreground: 60 17% 98%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 135 18% 35%;
   }
 }
 
@@ -103,30 +97,32 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Epilogue', system-ui, sans-serif;
-    background-image: var(--gradient-bg);
+    font-family: 'Onest', system-ui, sans-serif;
     min-height: 100vh;
+    letter-spacing: -0.005em;
   }
   h1, h2, h3, h4 {
-    font-family: 'Urbanist', system-ui, sans-serif;
-    letter-spacing: -0.02em;
-    font-weight: 500;
+    font-family: 'Funnel Display', system-ui, sans-serif;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    font-weight: 600;
   }
   *, button, input, select, textarea, optgroup {
-    font-family: 'Epilogue', system-ui, sans-serif;
+    font-family: 'Onest', system-ui, sans-serif;
   }
   input, button, textarea, select {
     font-family: inherit;
   }
   svg text {
-    font-family: 'Urbanist', system-ui, sans-serif;
+    font-family: 'Funnel Display', system-ui, sans-serif;
   }
 }
 
 @layer utilities {
-  .bg-gradient-primary { background-image: var(--gradient-primary); }
-  .bg-gradient-accent { background-image: var(--gradient-accent); }
-  .bg-gradient-hero { background-image: var(--gradient-hero); }
+  /* DRYOS system avoids decorative gradients/strong shadows — flat surfaces, thin borders */
+  .bg-gradient-primary { background-color: hsl(var(--primary)); }
+  .bg-gradient-accent { background-color: hsl(var(--primary)); }
+  .bg-gradient-hero { background-color: hsl(var(--accent)); }
   .shadow-glow { box-shadow: var(--shadow-glow); }
   .shadow-accent-glow { box-shadow: var(--shadow-accent); }
   .shadow-soft { box-shadow: var(--shadow-md); }
