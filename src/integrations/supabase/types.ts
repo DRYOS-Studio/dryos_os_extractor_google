@@ -103,8 +103,9 @@ export type Database = {
         Row: {
           ai_enabled: boolean
           auto_followup_count: number
+          contact_email: string | null
           contact_name: string | null
-          contact_phone: string
+          contact_phone: string | null
           created_at: string
           human_takeover_at: string | null
           id: string
@@ -118,8 +119,9 @@ export type Database = {
         Insert: {
           ai_enabled?: boolean
           auto_followup_count?: number
+          contact_email?: string | null
           contact_name?: string | null
-          contact_phone: string
+          contact_phone?: string | null
           created_at?: string
           human_takeover_at?: string | null
           id?: string
@@ -133,8 +135,9 @@ export type Database = {
         Update: {
           ai_enabled?: boolean
           auto_followup_count?: number
+          contact_email?: string | null
           contact_name?: string | null
-          contact_phone?: string
+          contact_phone?: string | null
           created_at?: string
           human_takeover_at?: string | null
           id?: string

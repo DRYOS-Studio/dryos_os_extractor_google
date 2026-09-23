@@ -45,15 +45,15 @@ export const LeadCard = ({ lead, selected, onToggle }: Props) => {
   const sendToCrm = async () => {
     if (!user) return;
     const phone = toCrmPhone(lead.phone_normalized);
-    if (!phone) return toast.error("Lead sem telefone — não dá pra enviar pro CRM");
+    const email = lead.email;
+    if (!phone && !email) return toast.error("Lead sem telefone nem email — não dá pra enviar pro CRM");
 
     setCrmState("sending");
-    const { data: existing } = await supabase
-      .from("conversations")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("contact_phone", phone)
-      .maybeSingle();
+    const dedupeQuery = supabase.from("conversations").select("id").eq("user_id", user.id);
+    const { data: existing } = await (phone
+      ? dedupeQuery.eq("contact_phone", phone)
+      : dedupeQuery.eq("contact_email", email!)
+    ).maybeSingle();
     if (existing) {
       setCrmState("exists");
       toast.info("Esse contato já está no CRM");
@@ -75,6 +75,7 @@ export const LeadCard = ({ lead, selected, onToggle }: Props) => {
     const { error } = await supabase.from("conversations").insert({
       user_id: user.id,
       contact_phone: phone,
+      contact_email: email,
       contact_name: lead.name,
       stage_id: stage.id,
     });
@@ -151,7 +152,7 @@ export const LeadCard = ({ lead, selected, onToggle }: Props) => {
               size="sm"
               className="h-7 text-xs gap-1"
               onClick={sendToCrm}
-              disabled={crmState !== "idle" || !lead.phone_normalized}
+              disabled={crmState !== "idle" || (!lead.phone_normalized && !lead.email)}
             >
               {crmState === "sending" ? (
                 <Loader2 className="h-3 w-3 animate-spin" />
