@@ -1,7 +1,12 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Star, Phone, Globe, MapPin, ExternalLink, Mail } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Star, Phone, Globe, MapPin, ExternalLink, Mail, Send, Loader2, CheckCircle2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 export interface Lead {
   id: string;
@@ -11,6 +16,7 @@ export interface Lead {
   city: string | null;
   state: string | null;
   phone: string | null;
+  phone_normalized: string | null;
   website: string | null;
   email: string | null;
   rating: number | null;
@@ -24,7 +30,62 @@ interface Props {
   onToggle: () => void;
 }
 
+// O CRM guarda o telefone no formato do WhatsApp (com DDI). O Google Maps não
+// inclui o 55 do Brasil, então completamos quando o número parece um DDD+número BR.
+function toCrmPhone(normalized: string | null): string | null {
+  if (!normalized) return null;
+  if (normalized.length === 10 || normalized.length === 11) return `55${normalized}`;
+  return normalized;
+}
+
 export const LeadCard = ({ lead, selected, onToggle }: Props) => {
+  const { user } = useAuth();
+  const [crmState, setCrmState] = useState<"idle" | "sending" | "sent" | "exists">("idle");
+
+  const sendToCrm = async () => {
+    if (!user) return;
+    const phone = toCrmPhone(lead.phone_normalized);
+    if (!phone) return toast.error("Lead sem telefone — não dá pra enviar pro CRM");
+
+    setCrmState("sending");
+    const { data: existing } = await supabase
+      .from("conversations")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("contact_phone", phone)
+      .maybeSingle();
+    if (existing) {
+      setCrmState("exists");
+      toast.info("Esse contato já está no CRM");
+      return;
+    }
+
+    const { data: stage } = await supabase
+      .from("pipeline_stages")
+      .select("id")
+      .eq("user_id", user.id)
+      .order("position", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    if (!stage) {
+      setCrmState("idle");
+      return toast.error("Nenhum funil encontrado no CRM");
+    }
+
+    const { error } = await supabase.from("conversations").insert({
+      user_id: user.id,
+      contact_phone: phone,
+      contact_name: lead.name,
+      stage_id: stage.id,
+    });
+    if (error) {
+      setCrmState("idle");
+      return toast.error(error.message);
+    }
+    setCrmState("sent");
+    toast.success("Lead enviado para o CRM 🚀");
+  };
+
   return (
     <Card className={`p-4 transition-all hover:shadow-hover ${selected ? "ring-2 ring-primary shadow-glow" : ""}`}>
       <div className="flex gap-3">
@@ -73,16 +134,35 @@ export const LeadCard = ({ lead, selected, onToggle }: Props) => {
             )}
           </div>
 
-          {lead.google_url && (
-            <a
-              href={lead.google_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs text-primary hover:underline mt-2"
+          <div className="flex items-center justify-between gap-2 mt-2">
+            {lead.google_url ? (
+              <a
+                href={lead.google_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+              >
+                Ver no Google Maps <ExternalLink className="h-3 w-3" />
+              </a>
+            ) : <span />}
+
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-7 text-xs gap-1"
+              onClick={sendToCrm}
+              disabled={crmState !== "idle" || !lead.phone_normalized}
             >
-              Ver no Google Maps <ExternalLink className="h-3 w-3" />
-            </a>
-          )}
+              {crmState === "sending" ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : crmState === "sent" || crmState === "exists" ? (
+                <CheckCircle2 className="h-3 w-3" />
+              ) : (
+                <Send className="h-3 w-3" />
+              )}
+              {crmState === "sent" ? "Enviado" : crmState === "exists" ? "Já no CRM" : "Enviar para CRM"}
+            </Button>
+          </div>
         </div>
       </div>
     </Card>

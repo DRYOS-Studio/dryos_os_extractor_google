@@ -1,7 +1,10 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 import { Search, History, Settings, LogOut, Target, Users } from "lucide-react";
+
+const CRM_URL = "https://crm-21.vercel.app";
 
 export const AppHeader = () => {
   const { user, signOut } = useAuth();
@@ -10,6 +13,23 @@ export const AppHeader = () => {
     `px-3 py-2 rounded-lg text-sm transition-colors ${
       isActive ? "bg-primary/10 text-primary font-semibold" : "text-muted-foreground font-medium hover:text-foreground hover:bg-secondary"
     }`;
+
+  const openCRM = () => {
+    // Open synchronously so the tab isn't blocked as a popup while we await the session.
+    const win = window.open("", "_blank");
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!win) return;
+      if (!session) {
+        win.location.href = CRM_URL;
+        return;
+      }
+      const params = new URLSearchParams({
+        access_token: session.access_token,
+        refresh_token: session.refresh_token,
+      });
+      win.location.href = `${CRM_URL}/sso#${params.toString()}`;
+    });
+  };
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md bg-background/80 border-b">
@@ -29,14 +49,9 @@ export const AppHeader = () => {
             <NavLink to="/historico" className={linkCls}>
               <span className="inline-flex items-center gap-2"><History className="h-4 w-4" />Histórico</span>
             </NavLink>
-            <a
-              href="https://crm-21.vercel.app"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={linkCls({ isActive: false })}
-            >
+            <button type="button" onClick={openCRM} className={linkCls({ isActive: false })}>
               <span className="inline-flex items-center gap-2"><Users className="h-4 w-4" />Prospectar</span>
-            </a>
+            </button>
             <NavLink to="/configuracoes" className={linkCls}>
               <span className="inline-flex items-center gap-2"><Settings className="h-4 w-4" />Configurações</span>
             </NavLink>
