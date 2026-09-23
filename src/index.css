@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&family=Epilogue:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 220 40% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Primary: vibrant blue */
+    --primary: 222 89% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 222 95% 65%;
+
+    /* Secondary: soft surface */
+    --secondary: 220 30% 95%;
+    --secondary-foreground: 222 47% 15%;
+
+    --muted: 220 25% 94%;
+    --muted-foreground: 220 10% 46%;
+
+    /* Accent: orange CTA */
+    --accent: 24 95% 55%;
+    --accent-foreground: 0 0% 100%;
+    --accent-glow: 30 100% 62%;
+
+    /* Success green */
+    --success: 152 70% 42%;
+    --success-foreground: 0 0% 100%;
+
+    /* Warning yellow */
+    --warning: 42 95% 55%;
+    --warning-foreground: 30 50% 15%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 20% 90%;
+    --input: 220 20% 90%;
+    --ring: 222 89% 55%;
+
+    --radius: 0.875rem;
+
+    --gradient-primary: linear-gradient(135deg, hsl(222 89% 55%), hsl(250 85% 62%));
+    --gradient-accent: linear-gradient(135deg, hsl(24 95% 55%), hsl(14 95% 58%));
+    --gradient-bg: linear-gradient(180deg, hsl(220 50% 98%), hsl(220 40% 96%));
+    --gradient-hero: radial-gradient(ellipse at top, hsl(222 95% 65% / 0.15), transparent 60%);
+
+    --shadow-sm: 0 1px 2px hsl(222 50% 20% / 0.04);
+    --shadow-md: 0 4px 12px hsl(222 50% 20% / 0.06);
+    --shadow-lg: 0 12px 32px hsl(222 50% 20% / 0.10);
+    --shadow-glow: 0 8px 24px hsl(222 89% 55% / 0.25);
+    --shadow-accent: 0 8px 24px hsl(24 95% 55% / 0.30);
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222 47% 15%;
+    --sidebar-primary: 222 89% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 30% 95%;
+    --sidebar-accent-foreground: 222 47% 15%;
+    --sidebar-border: 220 20% 90%;
+    --sidebar-ring: 222 89% 55%;
+  }
+
+  .dark {
+    --background: 222 47% 8%;
+    --foreground: 220 30% 96%;
+    --card: 222 40% 12%;
+    --card-foreground: 220 30% 96%;
+    --popover: 222 40% 12%;
+    --popover-foreground: 220 30% 96%;
+    --primary: 222 89% 65%;
+    --primary-foreground: 222 47% 8%;
+    --secondary: 222 30% 18%;
+    --secondary-foreground: 220 30% 96%;
+    --muted: 222 30% 18%;
+    --muted-foreground: 220 15% 65%;
+    --accent: 24 95% 60%;
+    --accent-foreground: 0 0% 100%;
+    --success: 152 65% 50%;
+    --success-foreground: 0 0% 100%;
+    --warning: 42 95% 60%;
+    --warning-foreground: 30 50% 15%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 222 30% 22%;
+    --input: 222 30% 22%;
+    --ring: 222 89% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Epilogue', system-ui, sans-serif;
+    background-image: var(--gradient-bg);
+    min-height: 100vh;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Urbanist', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+    font-weight: 500;
+  }
+  *, button, input, select, textarea, optgroup {
+    font-family: 'Epilogue', system-ui, sans-serif;
+  }
+  input, button, textarea, select {
+    font-family: inherit;
+  }
+  svg text {
+    font-family: 'Urbanist', system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .bg-gradient-primary { background-image: var(--gradient-primary); }
+  .bg-gradient-accent { background-image: var(--gradient-accent); }
+  .bg-gradient-hero { background-image: var(--gradient-hero); }
+  .shadow-glow { box-shadow: var(--shadow-glow); }
+  .shadow-accent-glow { box-shadow: var(--shadow-accent); }
+  .shadow-soft { box-shadow: var(--shadow-md); }
+  .shadow-hover { box-shadow: var(--shadow-lg); }
+}
