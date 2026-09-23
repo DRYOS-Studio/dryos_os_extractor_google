@@ -1,7 +1,7 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Search, History, Settings, LogOut, Target } from "lucide-react";
+import { Search, History, Settings, LogOut, Target, Users } from "lucide-react";
 
 export const AppHeader = () => {
   const { user, signOut } = useAuth();
@@ -29,6 +29,14 @@ export const AppHeader = () => {
             <NavLink to="/historico" className={linkCls}>
               <span className="inline-flex items-center gap-2"><History className="h-4 w-4" />Histórico</span>
             </NavLink>
+            <a
+              href="https://crm-21.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={linkCls({ isActive: false })}
+            >
+              <span className="inline-flex items-center gap-2"><Users className="h-4 w-4" />Prospectar</span>
+            </a>
             <NavLink to="/configuracoes" className={linkCls}>
               <span className="inline-flex items-center gap-2"><Settings className="h-4 w-4" />Configurações</span>
             </NavLink>
