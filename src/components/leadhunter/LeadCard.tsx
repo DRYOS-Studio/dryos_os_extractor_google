@@ -33,7 +33,7 @@ export const LeadCard = ({ lead, selected, onToggle }: Props) => {
           <div className="flex items-start justify-between gap-2 mb-2">
             <h3 className="font-semibold truncate">{lead.name || "Sem nome"}</h3>
             {lead.rating != null && (
-              <Badge variant="secondary" className="bg-warning/15 text-warning-foreground border-warning/30 shrink-0">
+              <Badge variant="secondary" className="bg-warning/15 text-warning border-warning/30 shrink-0">
                 <Star className="h-3 w-3 fill-warning text-warning mr-1" />
                 {lead.rating.toFixed(1)} {lead.reviews_count ? `(${lead.reviews_count})` : ""}
               </Badge>
