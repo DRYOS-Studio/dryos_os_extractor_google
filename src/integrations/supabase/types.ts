@@ -12,8 +12,206 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
+      agent_configs: {
+        Row: {
+          created_at: string
+          enabled: boolean
+          followup_inactivity_minutes: number | null
+          followup_max_per_conversation: number
+          groq_api_key: string | null
+          groq_model: string
+          system_prompt: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          enabled?: boolean
+          followup_inactivity_minutes?: number | null
+          followup_max_per_conversation?: number
+          groq_api_key?: string | null
+          groq_model?: string
+          system_prompt?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          enabled?: boolean
+          followup_inactivity_minutes?: number | null
+          followup_max_per_conversation?: number
+          groq_api_key?: string | null
+          groq_model?: string
+          system_prompt?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      app_settings: {
+        Row: {
+          id: string
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: string | null
+        }
+        Insert: {
+          id?: string
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: string | null
+        }
+        Update: {
+          id?: string
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: string | null
+        }
+        Relationships: []
+      }
+      conversations: {
+        Row: {
+          ai_enabled: boolean
+          auto_followup_count: number
+          contact_name: string | null
+          contact_phone: string
+          created_at: string
+          human_takeover_at: string | null
+          id: string
+          inactivity_followup_at: string | null
+          instance_id: string | null
+          last_message_at: string
+          stage_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_enabled?: boolean
+          auto_followup_count?: number
+          contact_name?: string | null
+          contact_phone: string
+          created_at?: string
+          human_takeover_at?: string | null
+          id?: string
+          inactivity_followup_at?: string | null
+          instance_id?: string | null
+          last_message_at?: string
+          stage_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_enabled?: boolean
+          auto_followup_count?: number
+          contact_name?: string | null
+          contact_phone?: string
+          created_at?: string
+          human_takeover_at?: string | null
+          id?: string
+          inactivity_followup_at?: string | null
+          instance_id?: string | null
+          last_message_at?: string
+          stage_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_instance_id_fkey"
+            columns: ["instance_id"]
+            isOneToOne: false
+            referencedRelation: "whatsapp_instances"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_stage_id_fkey"
+            columns: ["stage_id"]
+            isOneToOne: false
+            referencedRelation: "pipeline_stages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      followups: {
+        Row: {
+          conversation_id: string
+          created_at: string
+          error: string | null
+          id: string
+          kind: string
+          send_at: string
+          sent_at: string | null
+          status: string
+          text_override: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          conversation_id: string
+          created_at?: string
+          error?: string | null
+          id?: string
+          kind?: string
+          send_at: string
+          sent_at?: string | null
+          status?: string
+          text_override?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          conversation_id?: string
+          created_at?: string
+          error?: string | null
+          id?: string
+          kind?: string
+          send_at?: string
+          sent_at?: string | null
+          status?: string
+          text_override?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "followups_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leads: {
         Row: {
           address: string | null
@@ -91,84 +289,104 @@ export type Database = {
           },
         ]
       }
-      linkedin_leads: {
+      messages: {
         Row: {
-          company_linkedin_url: string | null
+          content: string
+          conversation_id: string
           created_at: string
-          current_company: string | null
-          current_position: string | null
-          education: Json | null
-          email: string | null
-          experience: Json | null
-          full_name: string | null
-          headline: string | null
+          direction: string
           id: string
-          linkedin_url: string | null
-          location: string | null
-          profile_image: string | null
-          raw: Json | null
-          search_id: string
-          skills: string[] | null
+          sender: string
           user_id: string
         }
         Insert: {
-          company_linkedin_url?: string | null
+          content: string
+          conversation_id: string
           created_at?: string
-          current_company?: string | null
-          current_position?: string | null
-          education?: Json | null
-          email?: string | null
-          experience?: Json | null
-          full_name?: string | null
-          headline?: string | null
+          direction: string
           id?: string
-          linkedin_url?: string | null
-          location?: string | null
-          profile_image?: string | null
-          raw?: Json | null
-          search_id: string
-          skills?: string[] | null
+          sender: string
           user_id: string
         }
         Update: {
-          company_linkedin_url?: string | null
+          content?: string
+          conversation_id?: string
           created_at?: string
-          current_company?: string | null
-          current_position?: string | null
-          education?: Json | null
-          email?: string | null
-          experience?: Json | null
-          full_name?: string | null
-          headline?: string | null
+          direction?: string
           id?: string
-          linkedin_url?: string | null
-          location?: string | null
-          profile_image?: string | null
-          raw?: Json | null
-          search_id?: string
-          skills?: string[] | null
+          sender?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pipeline_stages: {
+        Row: {
+          color: string | null
+          created_at: string
+          id: string
+          name: string
+          position: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          position?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          position?: number
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
       }
       profiles: {
         Row: {
+          approved: boolean
           created_at: string
-          display_name: string | null
+          email: string | null
+          full_name: string | null
           id: string
+          onboarding_completed: boolean
           updated_at: string
+          user_id: string
         }
         Insert: {
+          approved?: boolean
           created_at?: string
-          display_name?: string | null
-          id: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          onboarding_completed?: boolean
           updated_at?: string
+          user_id: string
         }
         Update: {
+          approved?: boolean
           created_at?: string
-          display_name?: string | null
+          email?: string | null
+          full_name?: string | null
           id?: string
+          onboarding_completed?: boolean
           updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -227,6 +445,32 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
+        Relationships: [
+          {
+            foreignKeyName: "searches_parent_search_id_fkey"
+            columns: ["parent_search_id"]
+            isOneToOne: false
+            referencedRelation: "searches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
         Relationships: []
       }
       user_settings: {
@@ -253,15 +497,64 @@ export type Database = {
         }
         Relationships: []
       }
+      whatsapp_instances: {
+        Row: {
+          created_at: string
+          id: string
+          instance_token: string | null
+          last_disconnected_at: string | null
+          name: string
+          phone: string | null
+          profile_name: string | null
+          server_url: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          instance_token?: string | null
+          last_disconnected_at?: string | null
+          name: string
+          phone?: string | null
+          profile_name?: string | null
+          server_url?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          instance_token?: string | null
+          last_disconnected_at?: string | null
+          name?: string
+          phone?: string | null
+          profile_name?: string | null
+          server_url?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      seed_pipeline_stages: { Args: { _user_id: string }; Returns: undefined }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -387,7 +680,12 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  public: {
+  graphql_public: {
     Enums: {},
+  },
+  public: {
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
