@@ -49,15 +49,18 @@ export const LeadCard = ({ lead, selected, onToggle }: Props) => {
     if (!phone && !email) return toast.error("Lead sem telefone nem email — não dá pra enviar pro CRM");
 
     setCrmState("sending");
-    const dedupeQuery = supabase.from("conversations").select("id").eq("user_id", user.id);
-    const { data: existing } = await (phone
-      ? dedupeQuery.eq("contact_phone", phone)
-      : dedupeQuery.eq("contact_email", email!)
-    ).maybeSingle();
-    if (existing) {
-      setCrmState("exists");
-      toast.info("Esse contato já está no CRM");
-      return;
+    if (phone) {
+      const { data: existing } = await supabase
+        .from("conversations")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("contact_phone", phone)
+        .maybeSingle();
+      if (existing) {
+        setCrmState("exists");
+        toast.info("Esse contato já está no CRM");
+        return;
+      }
     }
 
     const { data: stage } = await supabase
@@ -80,6 +83,16 @@ export const LeadCard = ({ lead, selected, onToggle }: Props) => {
       stage_id: stage.id,
     });
     if (error) {
+      const blob = `${error.code ?? ""} ${error.message ?? ""}`;
+      if (error.code === "23505" && blob.includes("conversations_user_phone_uidx")) {
+        setCrmState("exists");
+        toast.info("Esse contato já está no CRM");
+        return;
+      }
+      if (error.code === "23505" && blob.includes("conversations_user_email_uidx")) {
+        setCrmState("idle");
+        return toast.error("email já cadastrado em outro contato");
+      }
       setCrmState("idle");
       return toast.error(error.message);
     }
@@ -88,7 +101,10 @@ export const LeadCard = ({ lead, selected, onToggle }: Props) => {
   };
 
   return (
-    <Card className={`p-4 transition-all hover:shadow-hover ${selected ? "ring-2 ring-primary shadow-glow" : ""}`}>
+    <Card
+      data-lead-name={lead.name ?? ""}
+      className={`p-4 transition-all hover:shadow-hover ${selected ? "ring-2 ring-primary shadow-glow" : ""}`}
+    >
       <div className="flex gap-3">
         <Checkbox checked={selected} onCheckedChange={onToggle} className="mt-1" />
         <div className="flex-1 min-w-0">
