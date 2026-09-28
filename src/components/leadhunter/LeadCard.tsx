@@ -3,7 +3,10 @@ import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, Phone, Globe, MapPin, ExternalLink, Mail, Send, Loader2, CheckCircle2 } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Star, Phone, Globe, MapPin, ExternalLink, Mail, Send, Loader2, CheckCircle2, Pencil } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
@@ -28,6 +31,7 @@ interface Props {
   lead: Lead;
   selected: boolean;
   onToggle: () => void;
+  onUpdated: (lead: Lead) => void;
 }
 
 // O CRM guarda o telefone no formato do WhatsApp (com DDI). O Google Maps não
@@ -38,9 +42,60 @@ function toCrmPhone(normalized: string | null): string | null {
   return normalized;
 }
 
-export const LeadCard = ({ lead, selected, onToggle }: Props) => {
+function normalizePhone(phone: string): string | null {
+  const digits = phone.replace(/\D/g, "");
+  return digits || null;
+}
+
+export const LeadCard = ({ lead, selected, onToggle, onUpdated }: Props) => {
   const { user } = useAuth();
   const [crmState, setCrmState] = useState<"idle" | "sending" | "sent" | "exists">("idle");
+  const [editing, setEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({
+    name: lead.name ?? "",
+    phone: lead.phone ?? "",
+    email: lead.email ?? "",
+    website: lead.website ?? "",
+    address: lead.address ?? "",
+    city: lead.city ?? "",
+    state: lead.state ?? "",
+  });
+
+  const openEditor = () => {
+    setForm({
+      name: lead.name ?? "",
+      phone: lead.phone ?? "",
+      email: lead.email ?? "",
+      website: lead.website ?? "",
+      address: lead.address ?? "",
+      city: lead.city ?? "",
+      state: lead.state ?? "",
+    });
+    setEditing(true);
+  };
+
+  const saveLead = async () => {
+    if (!user) return;
+    setSaving(true);
+    const phoneNormalized = normalizePhone(form.phone);
+    const updates = {
+      name: form.name.trim() || null,
+      phone: form.phone.trim() || null,
+      phone_normalized: phoneNormalized,
+      email: form.email.trim() || null,
+      website: form.website.trim() || null,
+      address: form.address.trim() || null,
+      city: form.city.trim() || null,
+      state: form.state.trim() || null,
+    };
+    const { data, error } = await supabase.from("leads").update(updates).eq("id", lead.id).select("*").single();
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    onUpdated(data as Lead);
+    setEditing(false);
+    toast.success("Lead atualizado");
+  };
 
   const sendToCrm = async () => {
     if (!user) return;
@@ -63,23 +118,27 @@ export const LeadCard = ({ lead, selected, onToggle }: Props) => {
       }
     }
 
-    const { data: stage } = await supabase
+    const { data: named } = await supabase
       .from("pipeline_stages")
-      .select("id")
-      .eq("user_id", user.id)
-      .order("position", { ascending: true })
-      .limit(1)
-      .maybeSingle();
+      .select("id, name")
+      .eq("user_id", user.id);
+    const stage =
+      named?.find((s) => s.name.trim().toLowerCase() === "novo prospect") ??
+      named?.find((s) => s.name.trim().toLowerCase() === "novo lead") ??
+      named?.[0];
     if (!stage) {
       setCrmState("idle");
       return toast.error("Nenhum funil encontrado no CRM");
     }
 
+    const city = [lead.city, lead.state].filter(Boolean).join(" / ") || null;
     const { error } = await supabase.from("conversations").insert({
       user_id: user.id,
       contact_phone: phone,
       contact_email: email,
       contact_name: lead.name,
+      contact_company: lead.name,
+      contact_city: city,
       stage_id: stage.id,
     });
     if (error) {
@@ -109,7 +168,12 @@ export const LeadCard = ({ lead, selected, onToggle }: Props) => {
         <Checkbox checked={selected} onCheckedChange={onToggle} className="mt-1" />
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2">
-            <h3 className="font-semibold truncate">{lead.name || "Sem nome"}</h3>
+            <div className="flex items-center gap-2 min-w-0">
+              <h3 className="font-semibold truncate">{lead.name || "Sem nome"}</h3>
+              <Button variant="ghost" size="icon" className="h-7 w-7 shrink-0" onClick={openEditor} aria-label="Editar lead">
+                <Pencil className="h-3.5 w-3.5" />
+              </Button>
+            </div>
             {lead.rating != null && (
               <Badge variant="secondary" className="bg-warning/15 text-warning border-warning/30 shrink-0">
                 <Star className="h-3 w-3 fill-warning text-warning mr-1" />
@@ -182,6 +246,42 @@ export const LeadCard = ({ lead, selected, onToggle }: Props) => {
           </div>
         </div>
       </div>
+
+      <Dialog open={editing} onOpenChange={setEditing}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Editar lead</DialogTitle>
+            <DialogDescription>Atualize os dados do contato, inclusive leads importados via CSV.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-2 sm:grid-cols-2">
+            {([
+              ["name", "Nome"],
+              ["phone", "Telefone"],
+              ["email", "E-mail"],
+              ["website", "Site"],
+              ["address", "Endereço"],
+              ["city", "Cidade"],
+              ["state", "Estado"],
+            ] as const).map(([field, label]) => (
+              <div key={field} className={field === "address" ? "sm:col-span-2" : ""}>
+                <Label htmlFor={`lead-${field}`}>{label}</Label>
+                <Input
+                  id={`lead-${field}`}
+                  value={form[field]}
+                  onChange={(event) => setForm((current) => ({ ...current, [field]: event.target.value }))}
+                />
+              </div>
+            ))}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditing(false)} disabled={saving}>Cancelar</Button>
+            <Button onClick={saveLead} disabled={saving}>
+              {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+              Salvar alterações
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };

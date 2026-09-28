@@ -103,6 +103,8 @@ export type Database = {
         Row: {
           ai_enabled: boolean
           auto_followup_count: number
+          contact_city: string | null
+          contact_company: string | null
           contact_email: string | null
           contact_name: string | null
           contact_phone: string | null
@@ -119,6 +121,8 @@ export type Database = {
         Insert: {
           ai_enabled?: boolean
           auto_followup_count?: number
+          contact_city?: string | null
+          contact_company?: string | null
           contact_email?: string | null
           contact_name?: string | null
           contact_phone?: string | null
@@ -135,6 +139,8 @@ export type Database = {
         Update: {
           ai_enabled?: boolean
           auto_followup_count?: number
+          contact_city?: string | null
+          contact_company?: string | null
           contact_email?: string | null
           contact_name?: string | null
           contact_phone?: string | null

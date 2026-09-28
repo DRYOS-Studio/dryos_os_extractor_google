@@ -330,7 +330,13 @@ export default function SearchPage() {
                 </div>
                 <div className="grid sm:grid-cols-2 gap-3 animate-fade-in">
                   {leads.map((l) => (
-                    <LeadCard key={l.id} lead={l} selected={selected.has(l.id)} onToggle={() => toggle(l.id)} />
+                    <LeadCard
+                      key={l.id}
+                      lead={l}
+                      selected={selected.has(l.id)}
+                      onToggle={() => toggle(l.id)}
+                      onUpdated={(updated) => setLeads((current) => current.map((item) => item.id === updated.id ? updated : item))}
+                    />
                   ))}
                 </div>
               </>

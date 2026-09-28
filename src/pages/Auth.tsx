@@ -54,8 +54,10 @@ export default function Auth() {
             <Target className="h-7 w-7 text-primary-foreground" strokeWidth={1.75} />
           </div>
           <div className="flex items-baseline">
-            <span className="text-3xl font-bold tracking-tight leading-none text-foreground font-display uppercase">
-              DRYOS OS - Extrator
+            <span className="text-3xl font-display tracking-tight leading-none">
+              <span className="font-medium text-muted-foreground">DRYOS</span>
+              <span className="mx-1.5 font-medium text-muted-foreground">-</span>
+              <span className="font-bold text-foreground">ProspectIA</span>
             </span>
           </div>
         </Link>
